@@ -125,6 +125,97 @@ void Renderer :: drawSquare(double lbx,double lby,double rtx,double rty,int fill
 			glEnd();
 		}
 }
+void Renderer :: drawCube(double lbx,double lby,double lbz,double rtx,double rty,double rtz,int fillFlag)
+{
+		switch(fillFlag)
+		{
+			case AIR:
+				glColor3f(0.0,0,0.0);
+				break;
+			case LIQUID:
+				glColor3f(0.1,0.1,0.7); //liquid
+				break;
+			case SOLID:
+				glColor3f(0.2,0.2,0);
+				break;
+
+		}
+		//fillFlag=1;
+		{
+			
+			
+glBegin(GL_QUADS);        // Draw The Cube Using quads
+    glColor3f(0.3f,0.3f,0.3f);    // Color Blue
+  //front face
+    
+    glVertex3f( lbx, lby, lbz);    // Top Right Of The Quad (Top)
+    glVertex3f( lbx, rty, lbz);    // Top Right Of The Quad (Top)
+    glVertex3f( rtx, rty, lbz);    // Top Right Of The Quad (Top)
+    glVertex3f( rtx, lby, lbz);    // Top Right Of The Quad (Top)
+ //Left face
+    //glColor3f(0.0f,0.0f,1.0f);    // Color Blue
+    glColor3f(0.4f,0.4f,0.4f);    // Color Blue
+ 
+    glVertex3f( lbx, lby, lbz);    // Top Right Of The Quad (Top)
+    glVertex3f( lbx, rty, lbz);    // Top Right Of The Quad (Top)
+    glVertex3f( lbx, rty, rtz);    // Top Right Of The Quad (Top)
+    glVertex3f( lbx, lby, rtz);    // Top Right Of The Quad (Top)
+   //glColor3f(1.0f,0.0f,0.0f);    // Color Blue
+   glColor3f(0.5f,0.5f,0.5f);    // Color Blue
+ 
+  
+  //Right face
+    glVertex3f( rtx, lby, lbz);    // Top Right Of The Quad (Top)
+    glVertex3f( rtx, rty, lbz);    // Top Right Of The Quad (Top)
+    glVertex3f( rtx, rty, rtz);    // Top Right Of The Quad (Top)
+    glVertex3f( rtx, lby, rtz);    // Top Right Of The Quad (Top)
+  // glColor3f(1.0f,1.0f,0.0f);    // Color Blue
+    //glColor3f(0.0f,0.0f,1.0f);    // Color Blue
+    glColor3f(0.6f,0.6f,0.6f);    // Color Blue
+  //back face
+    glVertex3f( lbx, lby, rtz);    // Top Right Of The Quad (Top)
+    glVertex3f( lbx, rty, rtz);    // Top Right Of The Quad (Top)
+    glVertex3f( rtx, rty, rtz);    // Top Right Of The Quad (Top)
+    glVertex3f( rtx, lby, rtz);    // Top Right Of The Quad (Top)
+  
+  //Bottom face
+  glColor3f(0.2f,0.2f,0.2f);    // Color Blue
+    glVertex3f( lbx, lby, lbz);    // Top Right Of The Quad (Top)
+    glVertex3f( lbx, lby, rtz);    // Top Right Of The Quad (Top)
+    glVertex3f( rtx, lby, rtz);    // Top Right Of The Quad (Top)
+    glVertex3f( rtx, lby, lbz);    // Top Right Of The Quad (Top)
+  
+ //glEnd();
+ 
+    //glColor3f(1.0f,0.0f,1.0f);    // Color Blue
+    glColor3f(0.9f,0.9f,0.9f);    // Color Blue
+ 
+  //Top face
+    glVertex3f( lbx, rty, lbz);    // Top Right Of The Quad (Top)
+    glVertex3f( lbx, rty, rtz);    // Top Right Of The Quad (Top)
+    glVertex3f( rtx, rty, rtz);    // Top Right Of The Quad (Top)
+    glVertex3f( rtx, rty, lbz);    // Top Right Of The Quad (Top)
+ 
+ 
+  glEnd();
+			
+		}
+		if(!fillFlag)
+		{
+		
+			glColor3f(.2,.2,.2); //unComment to show grid lines
+		
+		glBegin(GL_LINE_LOOP);
+	glColor3f(0.0f,1.0f,0.0f);    // Color Blue
+  //front face
+    
+    glVertex3f( lbx, lby, lbz);    // Top Right Of The Quad (Top)
+    glVertex3f( lbx, rty, lbz);    // Top Right Of The Quad (Top)
+    glVertex3f( rtx, rty, lbz);    // Top Right Of The Quad (Top)
+    glVertex3f( rtx, lby, lbz);    // Top Right Of The Quad (Top)
+ glEnd();
+		}
+}
 void Renderer :: drawSquareFilled(int li, int lj, int ri, int rj, double fillVal)
 {
 	double lbx = gridLBX + stepX*li;
@@ -436,12 +527,13 @@ void Renderer :: renderParticles()
     //renderGrid();
     //glColor3f(0.2,0.2,0.9);
     //renderBoundary();
+    for(double z=1;z<sGrid->nX-1;z++)
  	for (unsigned i = 0; i < sGrid->fluidParticles.size() ; i++ ){
 	glPointSize(4);
 	glBegin(GL_POINTS);
 		//glColor3f(1,i*0.001,0);
 		glColor3f(0,0,0.6);
-		glVertex2d(sGrid->fluidParticles.at(i)->x,sGrid->fluidParticles.at(i)->y);
+		glVertex3d(sGrid->fluidParticles.at(i)->x,sGrid->fluidParticles.at(i)->y,z/(double)sGrid->nX);
 	glEnd();
 	}
 }
@@ -566,4 +658,92 @@ void Renderer :: renderSurfaceBoundary() {
 }
 
 
+void Renderer ::  renderGrid3D()
+{
+	int nX = sGrid->nX;
+	int nY = sGrid->nY;
+	int nZ = sGrid->nY;
+	gridRTX = zoomFactor; //zoomFactorX
+    gridRTY = zoomFactor; //zoomFactorY
+    gridRTZ = zoomFactor; //zoomFactorY
+/*	gridLBX = -1;
+	gridLBY = -1;
+	gridLBZ = -1;*/
+	gridLBX = 0;
+	gridLBY = 0;
+	gridLBZ = 0;
 
+	stepX = (gridRTX - gridLBX)/nX;
+	stepY = (gridRTX - gridLBX)/nY;	
+	stepZ = (gridRTX - gridLBX)/nZ;	
+	//cout<<"\nInRenderer:displayGrid"<<nX<< " " <<nY<<" "<<gridLBX<<" "<<gridLBY;
+	gridLBX+=stepX;
+	gridLBY+=stepY;
+	gridLBZ+=stepZ;
+	
+	int fillFlag = 0;
+for (int k=1;k<=nZ-1;k++){
+			
+	  for (int i=1;i< nX-1;i++){
+		for (int j=1;j< nY-1;j++){
+				glColor3f(1,0,0);//set fill color..used if fillFlag=true
+				//drawSquare(gridLBX+stepX*(j-1),gridLBY+stepY*(i-1),gridLBX+stepX*j,gridLBY+stepY*i,fillFlag);//1: Filled grid,0:wire Frame
+				drawCube(gridLBX+stepX*(j-1),gridLBY+stepY*(i-1),gridLBZ+stepZ*(k-1), \
+								gridLBX+stepX*j,gridLBY+stepY*i,gridLBZ+stepZ*k,fillFlag);
+			}
+		}
+	}
+}
+
+
+void Renderer :: render3Denv()
+{
+//extern int zoomFactor;
+	int nX = sGrid->nX;
+	int nY = sGrid->nY;
+	int nZ = sGrid->nY;
+	gridRTX = zoomFactor; //zoomFactorX
+    gridRTY = zoomFactor; //zoomFactorY
+    gridRTZ = zoomFactor; //zoomFactorY
+/*	gridLBX = -1;
+	gridLBY = -1;
+	gridLBZ = -1;*/
+	gridLBX = 0;
+	gridLBY = 0;
+	gridLBZ = 0;
+
+	 stepX = (gridRTX - gridLBX)/nX;
+	 stepY = (gridRTX - gridLBX)/nY;	
+	 stepZ = (gridRTX - gridLBX)/nZ;	
+	//cout<<"\nInRenderer:displayGrid"<<nX<< " " <<nY<<" "<<gridLBX<<" "<<gridLBY;
+	gridLBX+=stepX;
+	gridLBY+=stepY;
+	gridLBZ+=stepZ;
+	
+	int fillFlag = 0;
+//for (int k=1;k<=nZ-1;k++){
+			
+	//  for (int i=1;i< nX-1;i++){
+		//for (int j=1;j< nY-1;j++){
+				glColor3f(1,0,0);//set fill color..used if fillFlag=true
+				//drawSquare(gridLBX+stepX*(j-1),gridLBY+stepY*(i-1),gridLBX+stepX*j,gridLBY+stepY*i,fillFlag);//1: Filled grid,0:wire Frame
+				drawCube(gridLBX+stepX*(0),gridLBY+stepY*(0),gridLBZ+stepZ*(0), \
+								gridLBX+stepX*(nY-2),gridLBY+stepY*(nX-2),gridLBZ+stepZ*(nZ-2),fillFlag);
+			//}
+		//}
+	//}
+}
+
+void Renderer :: renderAxis(){
+	glColor3f(1,0,0);
+  glBegin(GL_LINES);        
+  glVertex3f(-1.5f,0,0);
+  glVertex3f(1.5f,0,0);
+glEnd();
+  glBegin(GL_LINES);        
+  glVertex3f(0.0f,-1.5,0);
+  glVertex3f(0.0f,1.5,0);
+glEnd();
+	
+	
+}

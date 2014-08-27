@@ -21,6 +21,7 @@ public:
 	
 	int nX; //Number of vertical lines
 	int nY; //Number if Horizontal Lines..
+	//int nZ; //Number if Horizontal Lines..
 	
 	double dx;
 	double dy;

@@ -38,14 +38,20 @@ public:
 
 	double gridLBX;
 	double gridLBY;
+	double gridLBZ;
 
 	double gridRTX;
 	double gridRTY;
+	double gridRTZ;
 
 	double stepX;
 	double stepY;
+	double stepZ;
 
-
+void render3Denv();
+void renderGrid3D();
+void renderAxis();
+void drawCube(double lbx,double lby,double lbz,double rtx,double rty,double rtz,int fillFlag);
 	void updateGrid(GridStag* );
 	void initRenderer();
 	void init(GridStag* );

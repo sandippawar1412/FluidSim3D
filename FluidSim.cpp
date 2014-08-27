@@ -36,7 +36,8 @@ void  FluidSim :: simulate(double timestep)
 	double cflTime = (tt2.tv_sec - tt1.tv_sec) * 1000 + (tt2.tv_usec - tt1.tv_usec)/1000;
 
 	dt = cflVal > 0 && cflVal< 1 ? cflVal:0.1f ;
-	{   //mark fluid cells
+	{   
+		//mark fluid cells
 		gettimeofday(&tt1, NULL);		
 		advectParticles(sGrid->fluidParticles, sGrid->u,sGrid->v, dt);
 		gettimeofday(&tt2, NULL);		

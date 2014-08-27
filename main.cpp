@@ -10,7 +10,7 @@
 //#include "viennacl/vector.hpp"
 
 #define WG  //WG - With Graphics
-#undef WG
+//#undef WG
 
 int grid_size;
 int nthreads;
@@ -71,7 +71,9 @@ void openGlutWindow ( char* windowName) ;
 void reshape ( int w, int h ) ;
 void idleFun();
 
+
 #ifdef WG
+
 int main(int argc, char** argv)
 {
 	grid_size = GRID_SIZE;
@@ -109,6 +111,7 @@ int main(int argc, char** argv)
 #endif
 	
 void display(void){
+
 	preDisplay();
 	static bool flag[10]={false,false,false,false,false,true};//boundary grid particles surface vector mat
 
@@ -190,6 +193,53 @@ void display(void){
 	output1 = ' ';
 	postDisplay();
 }
+
+void DrawCube(void)
+{
+extern float xRotated, yRotated, zRotated;
+extern int render3DFlag ;
+     glMatrixMode(GL_MODELVIEW);
+    // clear the drawing buffer.
+    glClear(GL_COLOR_BUFFER_BIT);
+   glLoadIdentity();
+   
+        glTranslatef(0.0,0.0,-5.0);
+   glPushMatrix();  
+       //glTranslatef(0.4,0.4,-0.4);
+       //glTranslatef(-0.2,-0.2,0.0);
+    glRotatef(xRotated,1.0,0.0,0.0);
+    // rotation about Y axis
+    glRotatef(yRotated,0.0,1.0,0.0);
+    // rotation about Z axis
+    glRotatef(zRotated,0.0,0.0,1.0);
+//glScalef(2,2,2);
+glColor3f(1,1,1);
+//GLPoint3f(0,0,0);
+
+//glTranslatef(-0.25,-0.25,-1.0);    
+//glTranslatef(0.2,0.2,0.0);
+//renderGrid();
+if(render3DFlag==1)
+	render->render3Denv();
+else
+	render->renderGrid3D();
+	
+render->renderParticles();
+//drawCube();
+//        glTranslatef(0.5,0.5,0.0);
+
+glPopMatrix();
+
+render->renderAxis();
+
+//glTranslatef(0.5,0.5,0.5);
+//
+
+//glFlush();
+   glutSwapBuffers();
+
+}
+
 void idleFun ( void )
 {
 	extern bool isPause ;
@@ -236,7 +286,23 @@ void postDisplay()
 {
    glutSwapBuffers();
 }
-
+void reshape2(int x, int y)
+{
+    if (y == 0 || x == 0) return;  //Nothing is visible then, so return
+    //Set a new projection matrix
+    glMatrixMode(GL_PROJECTION);  
+    glLoadIdentity();
+    //Angle of view:40 degrees
+    //Near clipping plane distance: 0.5
+    //Far clipping plane distance: 20.0
+     
+    gluPerspective(40.0,(GLdouble)x/(GLdouble)y,0.5,20.0);
+    glMatrixMode(GL_MODELVIEW);
+    glViewport(0,0,x,y);  //Use the whole window for rendering
+}
+//- See more at: http://www.codemiles.com/c-opengl-examples/draw-3d-cube-using-opengl-t9018.html#sthash.oylwexKh.dpuf
+#define RENDER2D
+#undef RENDER2D
 void openGlutWindow(char* windowName)
 {
    glutInitDisplayMode ( GLUT_RGBA | GLUT_DOUBLE );
@@ -248,12 +314,20 @@ void openGlutWindow(char* windowName)
    glClearColor( 0.0f, 0.0f, 0.0f, 1.0f);
    glClear(GL_COLOR_BUFFER_BIT);
    glutSwapBuffers();
-   glClear(GL_COLOR_BUFFER_BIT);
-   glutSwapBuffers();
+   
+   #ifdef RENDER2D
    glutDisplayFunc(display);
-//   glutSpecialFunc(&SpecialKeyPressed);
+   //glutIdleFunc(idleFun);
+   #endif
+   
+   #ifndef RENDER2D
+   glutDisplayFunc(DrawCube);
+   #endif
+   
+   
+   glutSpecialFunc(&SpecialKeyPressed);
    glutKeyboardFunc(&KeyPressed);
-   glutReshapeFunc(reshape);
-   glutIdleFunc(idleFun);
+   glutReshapeFunc(reshape2);
+   
 }
 
